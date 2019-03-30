@@ -1,0 +1,30 @@
+body, html {
+    height: 100%;
+}
+
+.bg {
+    /* The image used */
+    background-image: url(../images/background-image8.jpg);
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.title{
+    color: white;
+    font-family: 'Permanent Marker', cursive;
+}
+
+form{
+    background-color: rgba(255,255,255, 0.7);
+    font-family: 'Acme', sans-serif;
+}
+
+.hidden{
+    visibility: hidden;
+}
