@@ -6,29 +6,29 @@ function selectOnlyThis(id) {
 
 function checkData(){
 
-    let address = false;
-    let region = false;
-    let city = false;
+    let address = document.getElementById("address").value;
+    let region = document.getElementById("region").value;
+    let city = document.getElementById("city").value;
 
-    if (document.getElementById("address").value === ''){
+    if ( address === ''){
         document.getElementById("invalid-address").style.visibility = 'visible';
     }else{
         document.getElementById("invalid-address").style.visibility = 'hidden';
-        address = true;
+        // address = true;
     }
     
-    if (document.getElementById("region").value === ''){
+    if (region === ''){
         document.getElementById("invalid-region").style.visibility = 'visible';
     }else{
         document.getElementById("invalid-region").style.visibility = 'hidden';
-        region = true;
+        //region = true;
     }
 
-    if (document.getElementById("city").value === ''){
+    if (city === ''){
         document.getElementById("invalid-city").style.visibility = 'visible';
     }else{
         document.getElementById("invalid-city").style.visibility = 'hidden';
-        city=true;
+        //city=true;
     }
 
     if (!address || !region || !city){
