@@ -9,8 +9,13 @@ function checkData() {
     let address = document.getElementById("address").value;
     let region = document.getElementById("region").value;
     let city = document.getElementById("city").value;
-    // let celcius = document.getElementById("ce").value;
-    // let farenheit = document.getElementById("").value;
+    let units;
+
+    if (document.getElementById("celsius").checked === true){
+        units = "metric";
+    }else{
+        units = "imperial";
+    }
 
     if (address === '' || !address.replace(/\s/g, '').length) {
         document.getElementById("invalid-address").style.visibility = 'visible';
@@ -33,7 +38,7 @@ function checkData() {
     if (!address || !region || (city === 'Select city') || !address.replace(/\s/g, '').length || !region.replace(/\s/g, '').length) {
         return;
     } else {
-        nomonatimAPIcall(address, region, city);
+        nomonatimAPIcall(address, region, city, units);
     }
 
 }
@@ -63,7 +68,7 @@ function nomonatimAPIcall(address, region, city, units) {
             let jsonObj = JSON.parse(this.responseText);
             const lat = jsonObj[0].lat;
             const lon = jsonObj[0].lon;
-            weatherAPIcall(lat, lon, "metric");
+            weatherAPIcall(lat, lon, units);
         }
     };
     xhttp.open("GET", callAPI, true);
@@ -74,13 +79,21 @@ function nomonatimAPIcall(address, region, city, units) {
 
 function weatherAPIcall(lat, lon, units) {
 
-    let type = "metric";
-    console.log(units);
-    // if (units === 'celcius') {
-    //     type = 'metric';
-    // } else {
-    //     type = 'imperial'
-    // }
+    let type;
+    let sign;
+    let speedSign;
+    let pressureSign;
+    if (units === 'metric') {
+        type = 'metric';
+        sign = ' °C';
+        speedSign = ' meters/sec';
+        pressureSign = ' hPa';
+    } else {
+        type = 'imperial'
+        sign = ' °F';
+        speedSign = ' miles/hour';
+        pressureSign = ' Mb';
+    }
 
     let callAPI = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "8&lon=" + lon + "&units=" + type + "&APPID=c4bbc94d779db5b4a6d8bb3c9d0bd4d0";
 
@@ -94,13 +107,13 @@ function weatherAPIcall(lat, lon, units) {
             changeCellData("#description",description + " in " + name);
 
             let temp_min = jsonObj.main.tepm_min;
-            changeCellData("#temp_min","L " + temp_min + "°C");
+            changeCellData("#temp_min","L " + temp_min + sign);
 
             let temp_max = jsonObj.main.temp_max;
-            changeCellData("#temp_max","| H " + temp_max + "°C");
+            changeCellData("#temp_max","| H " + temp_max + sign);
 
             let temp = jsonObj.main.temp;
-            changeCellData("#temp",temp + "°C");
+            changeCellData("#temp",temp + sign);
             
 
             let icon = jsonObj.weather[0].icon;
@@ -111,13 +124,13 @@ function weatherAPIcall(lat, lon, units) {
             changeCellData('#temp', temp + ' °C');
 
             let pressure = jsonObj.main.pressure;
-            changeCellData('#pressure', pressure + ' hPa');
+            changeCellData('#pressure', pressure + pressureSign);
 
             let humidity = jsonObj.main.humidity;
             changeCellData("#humidity", humidity + " %");
 
             let speed = jsonObj.wind.speed;
-            changeCellData("#windSpeed", speed + " meters/sec");
+            changeCellData("#windSpeed", speed + speedSign);
 
             let all = jsonObj.clouds.all;
             changeCellData("#cloudCover", all + "%");
