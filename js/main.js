@@ -31,7 +31,7 @@ function checkData() {
     if (!address || !region || (city === 'Select city') || !address.replace(/\s/g, '').length || !region.replace(/\s/g, '').length) {
         return;
     } else {
-        alert("We are ready for an ajax call");
+        nomonatimAPIcall(address,region,city);
     }
 
 }
@@ -48,5 +48,25 @@ function resetFields() {
 
     document.getElementById("celsius").checked = true;
     document.getElementById("farenheit").checked = false;
+
+}
+
+function nomonatimAPIcall(address, region, city) {
+
+    let jsonObj ;
+    let callAPI = "https://nominatim.openstreetmap.org/search?q=" + address + ", " + region + ", " + city + "&format=json" ;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+           jsonObj = JSON.parse(this.responseText);
+           console.log(jsonObj[0].lat);
+           console.log(jsonObj[0].lon);
+        }
+    };
+    xhttp.open("GET", callAPI, true);
+    xhttp.send();
+
+   
+   
 
 }
