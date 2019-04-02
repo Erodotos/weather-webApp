@@ -90,12 +90,23 @@
 
             <div class="tab-pane rounded-bottom active" id="rightNow">
 
-               <div class="col-lg-6 px-2 py-2">
+               <div class="col-lg-6 px-2 pt-3">
                   <table class="table table-striped">
                      <thead>
                         <tr>
-                           <th scope="col" id="icon">Image</th>
-                           <th scope="col" id="temp">Temperature</th>
+                           <td scope="col" class="align-middle"><img src="" id="icon"></td>
+                           <td scope="col">
+                              <small id="description">
+                              
+                              </small>
+                              <div>
+                                 <h4 id="temp"></h4>
+                              </div>
+                              <small>
+                                 <span id="temp_min"></span>
+                                 <span id="temp_max"></span>
+                              </small>
+                           </td>
                         </tr>
                      </thead>
                      <tbody>
@@ -116,12 +127,12 @@
                            <td id="cloudCover"></td>
                         </tr>
                         <tr>
-                           <td id="sunrise">Sunrise</td>
-                           <td></td>
+                           <td>Sunrise</td>
+                           <td id="sunrise"></td>
                         </tr>
                         <tr>
-                           <td id="sunset">Sunset</td>
-                           <td></td>
+                           <td>Sunset</td>
+                           <td id="sunset"></td>
                         </tr>
                      </tbody>
                   </table>

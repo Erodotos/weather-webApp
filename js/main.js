@@ -74,13 +74,13 @@ function nomonatimAPIcall(address, region, city, units) {
 
 function weatherAPIcall(lat, lon, units) {
 
-    let type;
-
-    if (units === 'celcius') {
-        type = 'metric';
-    } else {
-        type = 'imperial'
-    }
+    let type = "metric";
+    console.log(units);
+    // if (units === 'celcius') {
+    //     type = 'metric';
+    // } else {
+    //     type = 'imperial'
+    // }
 
     let callAPI = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "8&lon=" + lon + "&units=" + type + "&APPID=c4bbc94d779db5b4a6d8bb3c9d0bd4d0";
 
@@ -90,25 +90,49 @@ function weatherAPIcall(lat, lon, units) {
             let jsonObj = JSON.parse(this.responseText);
 
             let description = jsonObj.weather[0].description;
+            let name = jsonObj.name;
+            changeCellData("#description",description + " in " + name);
 
-            let icon = jsonObj.weather[0].icon;
-            changeCellData('#icon', icon);
+            let temp_min = jsonObj.main.tepm_min;
+            changeCellData("#temp_min","L " + temp_min + "°C");
+
+            let temp_max = jsonObj.main.temp_max;
+            changeCellData("#temp_max","| H " + temp_max + "°C");
 
             let temp = jsonObj.main.temp;
-            changeCellData('#temp', temp + ' hPa');
+            changeCellData("#temp",temp + "°C");
+            
+
+            let icon = jsonObj.weather[0].icon;
+            let element = document.querySelector("#icon");
+            element.src = "http://openweathermap.org/img/w/" + icon + ".png";
+
+
+            changeCellData('#temp', temp + ' °C');
 
             let pressure = jsonObj.main.pressure;
-            changeCellData('#pressure', pressure + ' °C');
+            changeCellData('#pressure', pressure + ' hPa');
 
             let humidity = jsonObj.main.humidity;
-            let temp_min = jsonObj.main.tepm_min;
-            let temp_max = jsonObj.main.temp_max;
-            let speed = jsonObj.wind.speed;
-            let all = jsonObj.clouds.all;
-            let country = jsonObj.sys.country;
-            let sunrise = jsonObj.sys.sunrise;
-            let sunset = jsonObj.sys.sunset;
+            changeCellData("#humidity", humidity + " %");
 
+            let speed = jsonObj.wind.speed;
+            changeCellData("#windSpeed", speed + " meters/sec");
+
+            let all = jsonObj.clouds.all;
+            changeCellData("#cloudCover", all + "%");
+
+            let sunrise = jsonObj.sys.sunrise;
+            let date = new Date(sunrise * 1000);
+            let hours = date.getHours();
+            let minutes = "0" + date.getSeconds();
+            changeCellData("#sunrise", hours + ":" + minutes.substr(-2));
+
+            let sunset = jsonObj.sys.sunset;
+            date = new Date(sunset * 1000);
+            hours = date.getHours();
+            minutes = "0" + date.getSeconds();
+            changeCellData("#sunset", hours + ":" + minutes.substr(-2));
 
         }
     };
@@ -118,12 +142,10 @@ function weatherAPIcall(lat, lon, units) {
 }
 
 function changeCellData(selector, data) {
-
     let element = document.querySelector(selector);
     element.textContent = data;
-    
-
 }
+
 
 
 
