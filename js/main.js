@@ -9,6 +9,8 @@ function checkData() {
     let address = document.getElementById("address").value;
     let region = document.getElementById("region").value;
     let city = document.getElementById("city").value;
+    // let celcius = document.getElementById("ce").value;
+    // let farenheit = document.getElementById("").value;
 
     if (address === '' || !address.replace(/\s/g, '').length) {
         document.getElementById("invalid-address").style.visibility = 'visible';
@@ -31,7 +33,7 @@ function checkData() {
     if (!address || !region || (city === 'Select city') || !address.replace(/\s/g, '').length || !region.replace(/\s/g, '').length) {
         return;
     } else {
-        nomonatimAPIcall(address,region,city);
+        nomonatimAPIcall(address, region, city);
     }
 
 }
@@ -51,22 +53,82 @@ function resetFields() {
 
 }
 
-function nomonatimAPIcall(address, region, city) {
+function nomonatimAPIcall(address, region, city, units) {
 
-    let jsonObj ;
-    let callAPI = "https://nominatim.openstreetmap.org/search?q=" + address + ", " + region + ", " + city + "&format=json" ;
+    let callAPI = "https://nominatim.openstreetmap.org/search?q=" + address + ", " + region + ", " + city + "&format=json";
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-           jsonObj = JSON.parse(this.responseText);
-           console.log(jsonObj[0].lat);
-           console.log(jsonObj[0].lon);
+            let jsonObj = JSON.parse(this.responseText);
+            const lat = jsonObj[0].lat;
+            const lon = jsonObj[0].lon;
+            weatherAPIcall(lat, lon, "metric");
         }
     };
     xhttp.open("GET", callAPI, true);
     xhttp.send();
 
-   
-   
 
 }
+
+function weatherAPIcall(lat, lon, units) {
+
+    let type;
+
+    if (units === 'celcius') {
+        type = 'metric';
+    } else {
+        type = 'imperial'
+    }
+
+    let callAPI = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "8&lon=" + lon + "&units=" + type + "&APPID=c4bbc94d779db5b4a6d8bb3c9d0bd4d0";
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            let jsonObj = JSON.parse(this.responseText);
+
+            let description = jsonObj.weather[0].description;
+
+            let icon = jsonObj.weather[0].icon;
+            changeCellData('#icon', icon);
+
+            let temp = jsonObj.main.temp;
+            changeCellData('#temp', temp + ' hPa');
+
+            let pressure = jsonObj.main.pressure;
+            changeCellData('#pressure', pressure + ' °C');
+
+            let humidity = jsonObj.main.humidity;
+            let temp_min = jsonObj.main.tepm_min;
+            let temp_max = jsonObj.main.temp_max;
+            let speed = jsonObj.wind.speed;
+            let all = jsonObj.clouds.all;
+            let country = jsonObj.sys.country;
+            let sunrise = jsonObj.sys.sunrise;
+            let sunset = jsonObj.sys.sunset;
+
+
+        }
+    };
+    xhttp.open("GET", callAPI, true);
+    xhttp.send();
+
+}
+
+function changeCellData(selector, data) {
+
+    let element = document.querySelector(selector);
+    element.textContent = data;
+    
+
+}
+
+
+
+
+
+
+
+
