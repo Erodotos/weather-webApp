@@ -41,7 +41,21 @@ form{
     text-align: center;
 }
 
+#temp_min{
+    color: blue;
+}
+
+#temp_max{
+    color: red;
+}
+
+#temp{
+    margin-bottom: 0px;
+}
+
 .map {
     height: 400px;
-    width: 100%;
+    width: 100%;    
+    margin: auto;
+    padding-left: 0px; 
 }

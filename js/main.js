@@ -11,9 +11,9 @@ function checkData() {
     let city = document.getElementById("city").value;
     let units;
 
-    if (document.getElementById("celsius").checked === true){
+    if (document.getElementById("celsius").checked === true) {
         units = "metric";
-    }else{
+    } else {
         units = "imperial";
     }
 
@@ -69,6 +69,7 @@ function nomonatimAPIcall(address, region, city, units) {
             const lat = jsonObj[0].lat;
             const lon = jsonObj[0].lon;
             weatherAPIcall(lat, lon, units);
+            loadTempMap(lon, lat);
         }
     };
     xhttp.open("GET", callAPI, true);
@@ -97,6 +98,8 @@ function weatherAPIcall(lat, lon, units) {
 
     let callAPI = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "8&lon=" + lon + "&units=" + type + "&APPID=c4bbc94d779db5b4a6d8bb3c9d0bd4d0";
 
+    console.log(callAPI);
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -104,17 +107,18 @@ function weatherAPIcall(lat, lon, units) {
 
             let description = jsonObj.weather[0].description;
             let name = jsonObj.name;
-            changeCellData("#description",description + " in " + name);
+            changeCellData("#description", description + " in " + name);
 
-            let temp_min = jsonObj.main.tepm_min;
-            changeCellData("#temp_min","L " + temp_min + sign);
+            let temp_min = jsonObj.main.temp_min;
+            console.log(temp_min);
+            changeCellData("#temp_min", "L:" + temp_min + sign);
 
             let temp_max = jsonObj.main.temp_max;
-            changeCellData("#temp_max","| H " + temp_max + sign);
+            changeCellData("#temp_max", "| H:" + temp_max + sign);
 
             let temp = jsonObj.main.temp;
-            changeCellData("#temp",temp + sign);
-            
+            changeCellData("#temp", temp + sign);
+
 
             let icon = jsonObj.weather[0].icon;
             let element = document.querySelector("#icon");
@@ -159,6 +163,27 @@ function changeCellData(selector, data) {
     element.textContent = data;
 }
 
+function loadTempMap(lon, lat) {
+    var map = new ol.Map({ // a map object is created
+        target: 'map', // the id of the div in html to contain the map
+        layers: [ // list of layers available in the map
+            new ol.layer.Tile({ // first and only layer is the OpenStreetMap tiled layer
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({ // view allows to specify center, resolution, rotation of the map
+            center: ol.proj.fromLonLat([parseInt(lon), parseInt(lat)]), // center of the map
+            zoom: 5 // zoom level (0 = zoomed out)
+        })
+    });
+
+    layer_temp = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=c4bbc94d779db5b4a6d8bb3c9d0bd4d0'
+        })
+    });
+    map.addLayer(layer_temp); // a temp layer on map
+}
 
 
 
