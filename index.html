@@ -13,6 +13,10 @@
       integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
    <link rel="stylesheet" href="./css/main.css">
 
+   <!-- Optional JavaScript -->
+   <script src="./js/main.js" defer></script>
+   <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js" defer></script>
+
    <!-- Google Fonts -->
    <link href="https://fonts.googleapis.com/css?family=Acme|Permanent+Marker" rel="stylesheet">
 
@@ -78,7 +82,7 @@
          </form>
       </div>
 
-      <div class="row-fluid mt-4">
+      <div id="results" class="row-fluid mt-4">
          <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                <a class="nav-item nav-link btn-light" id="rightNow-tab" data-toggle="tab" href="#rightNow">Right Now</a>
@@ -97,16 +101,11 @@
                            <tr>
                               <td scope="col" class="align-middle"><img src="" id="icon" width="80" height="80"></td>
                               <td scope="col">
-                                 <small id="description">
-
-                                 </small>
+                                 <small id="description"></small>
                                  <div>
                                     <h3 id="temp"></h3>
                                  </div>
-                                 <small id="temp_min">
-                                    <!-- <span id="temp_min"></span>
-                                    <span id="temp_max"></span> -->
-                                 </small>
+                                 <small id="temp_min"></small>
                                  <small id="temp_max"></small>
                               </td>
                            </tr>
@@ -159,46 +158,444 @@
                   </thead>
                   <tbody>
                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="align-middle" id="a1"></td>
+                        <td><img src="" id="a2"></td>
+                        <td class="align-middle" id="a3"></td>
+                        <td class="align-middle" id="a4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#a5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="a5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="a5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="a5icon">
+                                          </div>
+                                          <div id="a5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="a5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="a5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="a5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
                      </tr>
                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="align-middle" id="b1"></td>
+                        <td><img src="" id="b2"></td>
+                        <td class="align-middle" id="b3"></td>
+                        <td class="align-middle" id="b4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#b5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="b5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="b5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="b5icon">
+                                          </div>
+                                          <div id="b5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="b5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="b5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="b5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
                      </tr>
                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="align-middle" id="c1"></td>
+                        <td><img src="" id="c2"></td>
+                        <td class="align-middle" id="c3"></td>
+                        <td class="align-middle" id="c4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#c5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="c5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="c5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="c5icon">
+                                          </div>
+                                          <div id="a5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="c5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="c5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="c5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
                      </tr>
                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="align-middle" id="d1"></td>
+                        <td><img src="" id="d2"></td>
+                        <td class="align-middle" id="d3"></td>
+                        <td class="align-middle" id="d4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#d5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="d5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="d5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="d5icon">
+                                          </div>
+                                          <div id="d5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="d5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="d5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="d5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
                      </tr>
                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="align-middle" id="e1"></td>
+                        <td><img src="" id="e2"></td>
+                        <td class="align-middle" id="e3"></td>
+                        <td class="align-middle" id="e4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#e5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="e5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="e5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="e5icon">
+                                          </div>
+                                          <div id="e5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="e5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="e5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="e5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
                      </tr>
                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="align-middle" id="f1"></td>
+                        <td><img src="" id="f2"></td>
+                        <td class="align-middle" id="f3"></td>
+                        <td class="align-middle" id="f4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#f5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="f5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="f5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="f5icon">
+                                          </div>
+                                          <div id="f5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="f5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="f5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="f5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td class="align-middle" id="g1"></td>
+                        <td><img src="" id="g2"></td>
+                        <td class="align-middle" id="g3"></td>
+                        <td class="align-middle" id="g4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#g5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="g5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="g5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="g5icon">
+                                          </div>
+                                          <div id="g5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="g5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="g5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="g5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td class="align-middle" id="h1"></td>
+                        <td><img src="" id="h2"></td>
+                        <td class="align-middle" id="h3"></td>
+                        <td class="align-middle" id="h4"></td>
+                        <td class="align-middle">
+
+                           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#h5">
+                              View
+                           </button>
+
+                           <!-- Modal -->
+                           <div class="modal fade" id="h5" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                 <div class="modal-content">
+
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="h5header"></h5>
+                                       <button type="button" class="close" data-dismiss="modal">
+                                          <span>&times;</span>
+                                       </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                       <div class="row">
+                                          <div class="col-lg-6">
+                                             <img src="" id="h5icon">
+                                          </div>
+                                          <div id="h5description" class="col-lg-6"></div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-4">
+                                             <strong>Humidity</strong>
+                                             <div id="h5Humidity"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Pressure</strong>
+                                             <div id="h5Pressure"></div>
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <strong>Wind Speed</strong>
+                                             <div id="h5WindSpeed"></div>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                 </div>
+                              </div>
+                           </div>
+                        </td>
                      </tr>
                   </tbody>
                </table>
@@ -206,17 +603,9 @@
             </div>
 
          </div>
-
-
       </div>
    </div>
    </div>
-
-   <!-- Optional JavaScript -->
-   <script src="./js/main.js"></script>
-   <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
-   <script src="./js/map.js" defer></script>
-
 
    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

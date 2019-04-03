@@ -59,3 +59,7 @@ form{
     margin: auto;
     padding-left: 0px; 
 }
+
+#results{
+    visibility: hidden;
+}

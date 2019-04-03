@@ -39,6 +39,7 @@ function checkData() {
         return;
     } else {
         nomonatimAPIcall(address, region, city, units);
+        document.getElementById("results").style.visibility = 'visible';
     }
 
 }
@@ -68,14 +69,13 @@ function nomonatimAPIcall(address, region, city, units) {
             let jsonObj = JSON.parse(this.responseText);
             const lat = jsonObj[0].lat;
             const lon = jsonObj[0].lon;
-            weatherAPIcall(lat, lon, units);
             loadTempMap(lon, lat);
+            weatherAPIcall(lat, lon, units);
+            forecastAPIcall(lat, lon, units)
         }
     };
     xhttp.open("GET", callAPI, true);
     xhttp.send();
-
-
 }
 
 function weatherAPIcall(lat, lon, units) {
@@ -98,8 +98,6 @@ function weatherAPIcall(lat, lon, units) {
 
     let callAPI = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "8&lon=" + lon + "&units=" + type + "&APPID=c4bbc94d779db5b4a6d8bb3c9d0bd4d0";
 
-    console.log(callAPI);
-
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -110,7 +108,6 @@ function weatherAPIcall(lat, lon, units) {
             changeCellData("#description", description + " in " + name);
 
             let temp_min = jsonObj.main.temp_min;
-            console.log(temp_min);
             changeCellData("#temp_min", "L:" + temp_min + sign);
 
             let temp_max = jsonObj.main.temp_max;
@@ -118,7 +115,6 @@ function weatherAPIcall(lat, lon, units) {
 
             let temp = jsonObj.main.temp;
             changeCellData("#temp", temp + sign);
-
 
             let icon = jsonObj.weather[0].icon;
             let element = document.querySelector("#icon");
@@ -172,7 +168,7 @@ function loadTempMap(lon, lat) {
             })
         ],
         view: new ol.View({ // view allows to specify center, resolution, rotation of the map
-            center: ol.proj.fromLonLat([parseInt(lon), parseInt(lat)]), // center of the map
+            center: ol.proj.fromLonLat([parseFloat(lon), parseFloat(lat)]), // center of the map
             zoom: 5 // zoom level (0 = zoomed out)
         })
     });
@@ -185,10 +181,78 @@ function loadTempMap(lon, lat) {
     map.addLayer(layer_temp); // a temp layer on map
 }
 
+function forecastAPIcall(lat, lon, units) {
 
+    let type;
+    let sign;
+    let speedSign;
+    let pressureSign;
 
+    let modalHeader;
+    let modalDescription;
+    let modalicon;
+    let modalHumidity;
+    let modalPressure;
+    let modalWindSpeed;
+    let selector;
 
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+    if (units === 'metric') {
+        type = 'metric';
+        sign = ' °C';
+        speedSign = ' meters/sec';
+        pressureSign = ' hPa';
+    } else {
+        type = 'imperial'
+        sign = ' °F';
+        speedSign = ' miles/hour';
+        pressureSign = ' Mb';
+    }
 
+    let callAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lon + '&units=' + type + '&APPID=c4bbc94d779db5b4a6d8bb3c9d0bd4d0';
 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            let jsonObj = JSON.parse(this.responseText);
 
+            let date;
+            for (i = 1; i <= 8; i++) {
+
+                date = new Date(jsonObj.list[i - 1].dt * 1000);
+                hours = date.getHours();
+                minutes = "0" + date.getSeconds();
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "1", hours + ":" + minutes.substr(-2));
+
+                let icon = jsonObj.list[i - 1].weather[0].icon;
+                let element = document.querySelector("#" + String.fromCharCode(96 + i) + "2");
+                element.src = "http://openweathermap.org/img/w/" + icon + ".png";
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "3", jsonObj.list[i - 1].main.temp + sign);
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "4", jsonObj.list[i - 1].clouds.all + "%");
+
+                modalHeader = "Weather in " + jsonObj.city.name + " on " + date.getDay() + " " + months[date.getMonth()] + " " + date.getFullYear() + " " + hours + ":" + minutes.substr(-2);
+
+                selector = "#" + String.fromCharCode(96 + i) + "5header";
+                changeCellData(selector, modalHeader);
+
+                selector = "#" + String.fromCharCode(96 + i) + "5icon";
+                document.querySelector(selector).src = "http://openweathermap.org/img/w/" + icon + ".png";
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "5Humidity", jsonObj.list[i - 1].main.humidity + "%");
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "5Pressure", jsonObj.list[i - 1].main.pressure + pressureSign);
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "5WindSpeed", jsonObj.list[i - 1].wind.speed + speedSign);
+            }
+
+        }
+    };
+    xhttp.open("GET", callAPI, true);
+    xhttp.send();
+
+}
