@@ -6,6 +6,8 @@ function selectOnlyThis(id) {
 
 function checkData() {
 
+    document.getElementById("results").style.visibility = 'hidden';
+
     let address = document.getElementById("address").value;
     let region = document.getElementById("region").value;
     let city = document.getElementById("city").value;
@@ -39,12 +41,13 @@ function checkData() {
         return;
     } else {
         nomonatimAPIcall(address, region, city, units);
-        document.getElementById("results").style.visibility = 'visible';
     }
 
 }
 
 function resetFields() {
+
+    document.getElementById("results").style.visibility = 'hidden';
 
     document.getElementById("address").value = '';
     document.getElementById("region").value = '';
@@ -61,6 +64,8 @@ function resetFields() {
 
 function nomonatimAPIcall(address, region, city, units) {
 
+    document.getElementById("map").innerHTML = "";
+
     let callAPI = "https://nominatim.openstreetmap.org/search?q=" + address + ", " + region + ", " + city + "&format=json";
 
     var xhttp = new XMLHttpRequest();
@@ -69,9 +74,9 @@ function nomonatimAPIcall(address, region, city, units) {
             let jsonObj = JSON.parse(this.responseText);
             const lat = jsonObj[0].lat;
             const lon = jsonObj[0].lon;
-            loadTempMap(lon, lat);
             weatherAPIcall(lat, lon, units);
-            forecastAPIcall(lat, lon, units)
+            forecastAPIcall(lat, lon, units);
+            loadTempMap(lon, lat);
         }
     };
     xhttp.open("GET", callAPI, true);
@@ -179,6 +184,15 @@ function loadTempMap(lon, lat) {
         })
     });
     map.addLayer(layer_temp); // a temp layer on map
+
+    layer_temp2 = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=c4bbc94d779db5b4a6d8bb3c9d0bd4d0'
+        })
+    });
+    map.addLayer(layer_temp2); // a temp layer on map
+
+    document.getElementById("results").style.visibility = 'visible';
 }
 
 function forecastAPIcall(lat, lon, units) {
@@ -190,10 +204,6 @@ function forecastAPIcall(lat, lon, units) {
 
     let modalHeader;
     let modalDescription;
-    let modalicon;
-    let modalHumidity;
-    let modalPressure;
-    let modalWindSpeed;
     let selector;
 
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -248,6 +258,10 @@ function forecastAPIcall(lat, lon, units) {
                 changeCellData("#" + String.fromCharCode(96 + i) + "5Pressure", jsonObj.list[i - 1].main.pressure + pressureSign);
 
                 changeCellData("#" + String.fromCharCode(96 + i) + "5WindSpeed", jsonObj.list[i - 1].wind.speed + speedSign);
+
+
+                changeCellData("#" + String.fromCharCode(96 + i) + "5description", jsonObj.list[i - 1].weather[0].main + " (" + jsonObj.list[i - 1].weather[0].description + ")");
+
             }
 
         }

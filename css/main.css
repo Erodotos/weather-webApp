@@ -63,3 +63,8 @@ form{
 #results{
     visibility: hidden;
 }
+
+.nav-item{
+    background-color: #007bff;
+    color: white;
+}
